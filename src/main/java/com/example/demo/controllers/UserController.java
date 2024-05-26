@@ -1,9 +1,15 @@
 package com.example.demo.controllers;
 
+import com.example.demo.mappers.UserMapper;
 import com.example.demo.models.UserModel;
+import com.example.demo.models.UserPageModel;
+import com.example.demo.models.UserProductsModel;
+import com.example.demo.services.IUserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -12,27 +18,46 @@ import java.util.List;
 
 @RestController
 @RequestMapping("user")
+@RequiredArgsConstructor
+@CrossOrigin("*")
+
 public class UserController {
-    @GetMapping("get-first-name")
-    public String getFirstName() {
-        return "Petar";
+
+    private final IUserService userService;
+
+
+
+    @GetMapping("get-list")
+    public List<UserModel> getList() {
+
+        return userService.findAll();
     }
 
-    @GetMapping("get-first-name-list")
-    public List<String> getFirstNameList() {
-        return List.of("Petar", "John");
+    @GetMapping("get-user-products-list")
+    public List<UserProductsModel> getUserProductsList() {
+       return userService.findUserProductsAll();
     }
 
-    @PostMapping("create-user")
-    public boolean createUser(String firstName, String lastName) {
-        return true;
+    @GetMapping("get-page-list")
+    public UserPageModel getPageList(Integer pageNumber, Integer pageSize) {
+        return userService.findPagedList(PageRequest.of(pageNumber, pageSize));
     }
 
-    @PostMapping("create-user-body")
-    public ResponseEntity<?> createUserBody(@RequestBody @Valid UserModel userModel, BindingResult result){
-        if(result.hasErrors()){
-            return new ResponseEntity<>("Neuspesno registrovan", HttpStatus.INTERNAL_SERVER_ERROR);
+    @PostMapping("create")
+    public ResponseEntity<?> create(@RequestBody @Valid UserModel userModel, BindingResult result) {
+        if (result.hasErrors()) {
+            return new ResponseEntity<>("Neuspesno registrovan!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<UserModel>(userModel, HttpStatus.CREATED);
+
+        return new ResponseEntity<>(userService.create(userModel), HttpStatus.CREATED);
+
     }
+
+    @PostMapping("update")
+    public ResponseEntity<?> update(@RequestBody @Valid UserModel userModel, BindingResult result) {
+        return new ResponseEntity<>(userService.update(userModel), HttpStatus.CREATED);
+
+    }
+
+
 }
