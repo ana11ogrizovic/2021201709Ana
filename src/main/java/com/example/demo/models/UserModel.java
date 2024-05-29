@@ -10,7 +10,6 @@ import lombok.Data;
 @Builder
 public class UserModel {
 
-
     private int id;
     @NotBlank
     private String firstName;
