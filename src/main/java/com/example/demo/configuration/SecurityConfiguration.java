@@ -1,3 +1,10 @@
+
+package com.example.demo.configuration;
+
+
+import com.example.demo.constants.RoleConstants;
+
+
 package com.example.demo.configuration;
 
 
@@ -35,9 +42,17 @@ public class SecurityConfiguration {
                 .permitAll()
          //       .authenticated()
                 .and()
+
+
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -48,7 +63,13 @@ public class SecurityConfiguration {
 
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET","POST"));
+
         configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
+
+
+        configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
+
+
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

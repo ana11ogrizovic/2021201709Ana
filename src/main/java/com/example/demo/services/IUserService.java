@@ -14,5 +14,10 @@ public interface  IUserService {
     List<UserProductsModel> findUserProductsAll();
     UserModel update(UserModel model);
 
+
     void delete(Integer userId);
+
+    void delete(Integer userId);
+
+
 }

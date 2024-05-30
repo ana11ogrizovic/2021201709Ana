@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.User;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -47,6 +48,16 @@ public class JwtService {
         claims.put("roles", userDetails.getAuthorities());
 
         return generateToken(claims, userDetails.getEmail());
+
+    }
+
+    public String generateToken(Map<String, Object> extraClaims, String jwtSubject) {
+        return buildToken(extraClaims, jwtSubject, jwtExpiration);
+    }
+
+    public String generateToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails);
+
     }
 
     public String generateToken(Map<String, Object> extraClaims, String jwtSubject) {
@@ -59,13 +70,28 @@ public class JwtService {
 
     private String buildToken(
             Map<String, Object> extraClaims,
+
             String jwtSubject,
+
+
+            String jwtSubject,
+
+            UserDetails userDetails,
+
+
             long expiration
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(jwtSubject)
+
+
+                .setSubject(jwtSubject)
+
+                .setSubject(userDetails.getUsername())
+
+
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
