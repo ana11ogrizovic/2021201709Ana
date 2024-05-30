@@ -25,6 +25,7 @@ public class UserController {
 
     private final IUserService userService;
 
+
     @GetMapping("get-list")
     public List<UserModel> getList() {
         return userService.findAll();
@@ -61,11 +62,8 @@ public class UserController {
         userService.delete(userId);
         return ResponseEntity.ok("");
     }
-
-
     @GetMapping("get-list")
     public List<UserModel> getList() {
-
         return userService.findAll();
     }
 
@@ -80,19 +78,25 @@ public class UserController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> create(@RequestBody @Valid UserModel userModel, BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>("Neuspesno registrovan!", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        return new ResponseEntity<>(userService.create(userModel), HttpStatus.CREATED);
-
+    public ResponseEntity<?> create(@RequestBody @Valid UserModel userModel
+            , BindingResult result) {
+        return ResponseEntity.ok(userService.create(userModel));
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody @Valid UserModel userModel, BindingResult result) {
-        return new ResponseEntity<>(userService.update(userModel), HttpStatus.CREATED);
 
+
+        if (result.hasErrors()) {
+            return new ResponseEntity<>("Not updated!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseEntity.ok(userService.update(userModel));
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(Integer userId) {
+        userService.delete(userId);
+        return ResponseEntity.ok("");
     }
 
 

@@ -25,6 +25,9 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
+    @Value("${security.jwt.refresh.expiration-time}")
+    private long jwtRefreshExpiration;
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -45,6 +48,7 @@ public class JwtService {
         claims.put("roles", userDetails.getAuthorities());
 
         return generateToken(claims, userDetails.getEmail());
+
     }
 
     public String generateToken(Map<String, Object> extraClaims, String jwtSubject) {
@@ -53,10 +57,11 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
+
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+    public String generateToken(Map<String, Object> extraClaims, String jwtSubject) {
+        return buildToken(extraClaims, jwtSubject, jwtExpiration);
     }
 
     public long getExpirationTime() {
@@ -68,17 +73,24 @@ public class JwtService {
 
             String jwtSubject,
 
+
+            String jwtSubject,
+
             UserDetails userDetails,
+
 
             long expiration
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
+                .setSubject(jwtSubject)
+
 
                 .setSubject(jwtSubject)
 
                 .setSubject(userDetails.getUsername())
+
 
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
@@ -106,6 +118,12 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public String generateRefreshToken(
+            User userDetails
+    ) {
+        return buildToken(new HashMap<>(), userDetails.getEmail(), jwtRefreshExpiration);
     }
 
     private Key getSignInKey() {
