@@ -49,6 +49,7 @@ public class JwtService {
 
         return generateToken(claims, userDetails.getEmail());
 
+
     }
 
     public String generateToken(Map<String, Object> extraClaims, String jwtSubject) {
@@ -76,6 +77,9 @@ public class JwtService {
 
             String jwtSubject,
 
+
+            String jwtSubject,
+
             UserDetails userDetails,
 
 
@@ -85,6 +89,7 @@ public class JwtService {
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(jwtSubject)
+
 
 
                 .setSubject(jwtSubject)

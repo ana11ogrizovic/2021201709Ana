@@ -45,6 +45,7 @@ public class UserController {
     public ResponseEntity<?> create(@RequestBody @Valid UserModel userModel
             , BindingResult result) {
         return ResponseEntity.ok(userService.create(userModel));
+
     }
 
     @PutMapping("update")
@@ -81,6 +82,7 @@ public class UserController {
     public ResponseEntity<?> create(@RequestBody @Valid UserModel userModel
             , BindingResult result) {
         return ResponseEntity.ok(userService.create(userModel));
+
     }
 
     @PutMapping("update")

@@ -1,14 +1,15 @@
-
 package com.example.demo.configuration;
 
 
 import com.example.demo.constants.RoleConstants;
 
 
+
 package com.example.demo.configuration;
 
 
 import com.example.demo.constants.RoleConstants;
+
 import com.example.demo.filters.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -37,9 +38,13 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-         //       .requestMatchers("/auth/**")
-                .anyRequest()
+                .requestMatchers("/auth/**")
                 .permitAll()
+
+                .requestMatchers("/user/get-user-products-list").hasAnyRole(RoleConstants.EMPLOYEE)
+                .anyRequest()
+                .authenticated()
+
          //       .authenticated()
                 .and()
 
@@ -49,6 +54,7 @@ public class SecurityConfiguration {
 
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
 
                 .authenticationProvider(authenticationProvider)
@@ -63,6 +69,9 @@ public class SecurityConfiguration {
 
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET","POST"));
+
+        configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
+
 
         configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
 
