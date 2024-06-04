@@ -87,6 +87,7 @@ public class AuthenticationService {
         if (validUserTokens.isEmpty())
             return;
 
+
         validUserTokens.forEach(token -> {
             token.setExpired(true);
             token.setRevoked(true);
@@ -129,5 +130,14 @@ public class AuthenticationService {
                 .token(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+
+
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+
+        tokenRepository.saveAll(validUserTokens);
+
     }
 }

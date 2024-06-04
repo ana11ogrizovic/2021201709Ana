@@ -64,6 +64,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if(!(isTokenValid || isRefreshTokenValid)) throw new AuthorizationServiceException("Token is not valid!");
 
+                if(!isTokenValid) throw new AuthorizationServiceException("Token is not valid!");
+
+
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
